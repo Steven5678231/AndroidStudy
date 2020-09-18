@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">RunningMan</string>
 <!--    API_KEY-->
-    <string name="google_map_api_key">AIzaSyANXceLUUsuOzs5ogEUCvQoFjJ9q5Iif28</string>
+    <string name="google_map_api_key">***</string>
 <!--    LOGIN AND SIGN UP-->
     <string name="prompt_email">Email Address</string>
     <string name="password">Password</string>

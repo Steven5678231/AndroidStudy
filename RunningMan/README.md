@@ -1,5 +1,8 @@
 # Page Structure
-
+```mermaid
+graph TD
+A[homepage] --> B()
+```
 
 # Database Structure
 1. Database  

@@ -19,7 +19,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.runningman.models.RunInfo;
 import com.example.runningman.models.User;
@@ -53,6 +55,7 @@ public class RunningActivity extends FragmentActivity implements View.OnClickLis
     private RunInfo runInfo;
     private Date startTime;
     private LatLng startlatLng;
+    private boolean startCount;
 
     GoogleMap map;
     SupportMapFragment mapFragment;
@@ -61,6 +64,7 @@ public class RunningActivity extends FragmentActivity implements View.OnClickLis
     FirebaseDatabase mDatabase;
     DatabaseReference locationDb,runRecordDb;
 
+    Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +73,8 @@ public class RunningActivity extends FragmentActivity implements View.OnClickLis
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-
+        //init
+        startCount = false;
         //Database reference
         mDatabase = FirebaseDatabase.getInstance();
         locationDb = mDatabase.getReference("locations");
@@ -93,11 +98,14 @@ public class RunningActivity extends FragmentActivity implements View.OnClickLis
         findViewById(R.id.stopRun).setOnClickListener(this);
 
         //Run updateLocation every x minutes
-        int delay = 5000; //milliseconds
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        final int delay = 5000; //milliseconds
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(runnable = new Runnable() {
             @Override
             public void run() {
-               updateLocation();
+                Log.d(TAG, "run: running");
+                handler.postDelayed(runnable, delay);
+                updateLocation();
             }
         },delay);
 
@@ -114,15 +122,21 @@ public class RunningActivity extends FragmentActivity implements View.OnClickLis
                         @Override
                         public void onMapReady(GoogleMap googleMap) {
                             // current location
-                            LatLng currentlatLng = new LatLng(location.getLatitude(),
-                                    location.getLongitude());
+//                            LatLng currentlatLng = new LatLng(location.getLatitude(),
+//                                    location.getLongitude());
+                            LatLng currentlatLng = new LatLng(startlatLng.latitude+0.01,
+                                    startlatLng.longitude+0.01);
+
+                            Log.d(TAG, "onMapReady: "+startlatLng);
+                            Log.d(TAG, "onMapReady: "+currentlatLng);
 
                             Polyline line = googleMap.addPolyline(new PolylineOptions()
-                                    .add(startlatLng, new LatLng(40.7, -74.0))
+                                    .add(startlatLng, currentlatLng)
                                     .width(5)
                                     .color(Color.RED));
 
                             startlatLng = currentlatLng;
+                            Log.d(TAG, "onMapReady: updating startlatLng"+startlatLng);
                         }
                     });
                 }
@@ -184,30 +198,39 @@ public class RunningActivity extends FragmentActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.startRun:{
+                Button Start_stop =
+                        (Button)findViewById(R.id.startRun);
+
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd-MMM-yyyy hh:mm:ss a");
                 startDate = simpleDateFormat.format(calendar.getTime());
                 startTime = calendar.getTime();
+                startCount = true;
                 Log.d(TAG, "onClick: "+startDate);
                 Log.d(TAG, "onClick2: "+startTime);
 
                 break;
             }
             case R.id.stopRun:{
-                Calendar calendar = Calendar.getInstance();
-                Date finishTime = calendar.getTime();
-                Log.d(TAG, "onClick: "+finishTime);
-                long diff = finishTime.getTime() - startTime.getTime();
-                Log.d(TAG, "onClick: "+diff);
+                if (startCount){
+                    Calendar calendar = Calendar.getInstance();
+                    Date finishTime = calendar.getTime();
+                    Log.d(TAG, "onClick: "+finishTime);
+                    long diff = finishTime.getTime() - startTime.getTime();
+                    Log.d(TAG, "onClick: "+diff);
 
-                long diffSeconds = diff / 1000;
-                long diffMinutes = diff / (60*1000);
-                long diffHours = diff / (60*60*1000);
+                    long diffSeconds = diff / 1000;
+                    long diffMinutes = diff / (60*1000);
+                    long diffHours = diff / (60*60*1000);
 
-                //Store info in database
-                RunInfo runInfo = new RunInfo(diff,0,0,startDate);
-                String uid = mAuth.getCurrentUser().getUid();
-                runRecordDb.child(uid).setValue(runInfo);
+                    //Store info in database
+                    RunInfo runInfo = new RunInfo(diff,0,0,startDate);
+                    String uid = mAuth.getCurrentUser().getUid();
+                    runRecordDb.child(uid).setValue(runInfo);
+                    startCount = false;
+                }else{
+                    Toast.makeText(RunningActivity.this,"Please start first", Toast.LENGTH_SHORT).show();
+                }
 
                 break;
             }
