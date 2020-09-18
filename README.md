@@ -75,8 +75,33 @@ Passing data:
     BActivity.actionStart(AActivity.this, extraData);
 ```
 
-# ChapterThree: UI elements
-1. TextView
+# ChapterThree:
+## UI elements
+1. TextView  
+    android:gravity="center"/top/bottom..  
+    android:textSize  
+    android:textColor  
+2. Button  
+    android:textAllCaps="false" disable auto transfer to Cap  
+3. EditText  
+    android:hint=""
+
+    editText.getText().toString() // get the context of the input of EditText
+4. ImageView  
+    android:src=""
+
+    imageView.setImageResource("picture") // set image
+5. ProgressBar  
+    style= //set loading style  
+    android:visibility="visible"/invisible/gone  
+    getVisibiliity()  
+    setVisibility(View.VISIBLE/View.INVISIBLE/View.GONE)  
+    getProgress()
+    setProgress()
+6. AlertDialog + ProgressDialog
+
+## Layout
+
      
 
 

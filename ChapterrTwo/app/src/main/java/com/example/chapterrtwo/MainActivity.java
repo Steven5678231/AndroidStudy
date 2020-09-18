@@ -2,8 +2,11 @@ package com.example.chapterrtwo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,8 +39,34 @@ public class MainActivity extends AppCompatActivity {
         startDialogActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, DialogActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, DialogActivity.class);
+//                startActivity(intent);
+//                AlertDialog
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+//                dialog.setTitle("This is a dialog");
+//                dialog.setMessage("Important");
+//                dialog.setCancelable(false);
+//                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                });
+//                dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                });
+//                dialog.show();
+//                ProgressDialog
+//                ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+//                progressDialog.setTitle("This is ProgressDialog");
+//                progressDialog.setMessage("Loading...");
+//                progressDialog.setCancelable(true);
+//                progressDialog.show();
+
+                
             }
         });
     }
